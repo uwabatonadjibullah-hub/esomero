@@ -104,16 +104,17 @@ p {
 .button-group button {
   padding: 12px 28px;
   font-size: 1rem;
-  background-color: #ffffffcc;
-  color: #333;
+  background-color: #0a1f44; /* Dark blue */
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .button-group button:hover {
-  background-color: #fff;
+  background-color: #061633; /* Darker on hover */
   transform: translateY(-2px);
 }
 
