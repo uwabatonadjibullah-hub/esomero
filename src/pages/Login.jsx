@@ -41,11 +41,30 @@ const Login = () => {
     <div className="login-container">
       <h2>Welcome Back 🎬</h2>
       <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
         {error && <p className="error">{error}</p>}
       </form>
+
+      <div className="signup-prompt">
+        <p>If you are a trainee and have not yet created an account, please sign up!</p>
+        <button onClick={() => navigate('/signup')} className="signup-button">
+          Sign Up
+        </button>
+      </div>
     </div>
   );
 };
