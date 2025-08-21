@@ -1,5 +1,5 @@
 import React from 'react';
-import './TraineeHome.css';
+import '../styles/TraineeHome.css';
 
 const TraineeHome = () => {
   const backgrounds = [

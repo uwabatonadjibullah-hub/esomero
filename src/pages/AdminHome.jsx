@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './AdminHome.css';
+import '../styles/AdminHome.css';
 
 const quotes = [
   "Empower one, uplift many.",
