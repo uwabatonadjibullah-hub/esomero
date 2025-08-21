@@ -1,27 +1,41 @@
-name: Deploy to Firebase Hosting
+name: build_and_deploy
 
 on:
   push:
     branches:
-      - master  
+      - master  # or 'main' if that's your default branch
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 🧱 Set up the job
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 🧰 Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      # 📦 Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # 🔧 Fix react-scripts permission
+      - name: Fix react-scripts permissions
+        run: chmod +x node_modules/.bin/react-scripts
+
+      # 🏗️ Build the project
       - name: Build project
         run: npm run build
 
+      # 🚀 Deploy to Firebase
       - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: w9jds/firebase-action@v2.2.0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          channelId: live
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
