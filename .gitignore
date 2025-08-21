@@ -1,0 +1,13 @@
+# 🔐 Sensitive files
+ksp-admin-tools/adminRegistry.json
+ksp-admin-tools/serviceAccountKey.json
+.env
+*.log
+
+# ⚙️ Build and dependency folders
+node_modules/
+build/
+
+# 🔄 Firebase config
+.firebase/
+.firebaserc
