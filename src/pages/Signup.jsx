@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 import '../styles/Signup.css';
@@ -15,6 +15,7 @@ const Signup = () => {
     program: ''
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,13 +25,16 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     try {
       const email = `${formData.username}@ksp.com`;
 
+      // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, formData.password);
       const uid = userCredential.user.uid;
 
+      // Save trainee info in Firestore
       await setDoc(doc(db, 'users', uid), {
         uid,
         name: formData.name,
@@ -42,7 +46,11 @@ const Signup = () => {
         username: formData.username
       });
 
-      navigate('/login');
+      // Optional: Send email verification
+      await sendEmailVerification(userCredential.user);
+
+      setSuccess('Signup successful! Please check your email for verification.');
+      setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
       setError(err.message);
     }
@@ -103,6 +111,7 @@ const Signup = () => {
         </select>
         <button type="submit">Sign Up</button>
         {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
       </form>
     </div>
   );

@@ -6,7 +6,7 @@ import { auth, db } from '../firebase/config';
 import '../styles/Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -16,10 +16,18 @@ const Login = () => {
     setError('');
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid;
+      const email = `${username}@ksp.com`;
 
-      const userDoc = await getDoc(doc(db, 'users', uid));
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Optional: Check if email is verified
+      if (!user.emailVerified) {
+        setError('Please verify your email before logging in.');
+        return;
+      }
+
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         const role = userDoc.data().role;
 
@@ -35,7 +43,7 @@ const Login = () => {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Login failed. Please check your email and password.');
+      setError('Login failed. Please check your username and password.');
     }
   };
 
@@ -44,12 +52,15 @@ const Login = () => {
       <h2>Welcome Back 🎬</h2>
       <form onSubmit={handleLogin}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
           required
         />
+        <p className="email-preview">
+          Logging in as: <strong>{username}@ksp.com</strong>
+        </p>
         <input
           type="password"
           placeholder="Password"

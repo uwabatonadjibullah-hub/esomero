@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 import '../styles/AdminHome.css';
 
 const quotes = [
@@ -18,8 +22,23 @@ const backgrounds = [
 export default function AdminHome() {
   const [currentQuote, setCurrentQuote] = useState(quotes[0]);
   const [bgIndex, setBgIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // 🔐 Auth check
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+        navigate('/login');
+      }
+    });
+
+    // 🎬 Cinematic effects
     const quoteInterval = setInterval(() => {
       setCurrentQuote(quotes[Math.floor(Math.random() * quotes.length)]);
     }, 5000);
@@ -31,8 +50,9 @@ export default function AdminHome() {
     return () => {
       clearInterval(quoteInterval);
       clearInterval(bgInterval);
+      unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="admin-home" style={{ backgroundImage: `url(${backgrounds[bgIndex]})` }}>
