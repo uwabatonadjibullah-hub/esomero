@@ -22,18 +22,20 @@ const Login = () => {
       const userDoc = await getDoc(doc(db, 'users', uid));
       if (userDoc.exists()) {
         const role = userDoc.data().role;
+
         if (role === 'admin') {
-          navigate('/admin');
+          navigate('/admin'); // Admin = Trainer
         } else if (role === 'trainee') {
           navigate('/trainee');
         } else {
-          setError('Unknown role. Contact support.');
+          setError('Unknown role. Please contact support.');
         }
       } else {
-        setError('User role not found. Please sign up first.');
+        setError('User profile not found. Please sign up first.');
       }
     } catch (err) {
-      setError(err.message);
+      console.error('Login error:', err);
+      setError('Login failed. Please check your email and password.');
     }
   };
 
