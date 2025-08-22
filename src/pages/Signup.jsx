@@ -28,7 +28,7 @@ const Signup = () => {
     setSuccess('');
 
     try {
-      const email = `${formData.username}@ksp.com`;
+      const email = `${formData.username}@gmail.com`;
 
       // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, formData.password);
@@ -78,7 +78,7 @@ const Signup = () => {
         />
         {formData.username && (
           <p className="email-preview">
-            Your KSP email will be: <strong>{formData.username}@ksp.com</strong>
+            Your KSP email will be: <strong>{formData.username}@gmail.com</strong>
           </p>
         )}
         <select name="gender" value={formData.gender} onChange={handleChange} required>
