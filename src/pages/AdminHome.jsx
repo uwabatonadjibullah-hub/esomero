@@ -14,9 +14,9 @@ const quotes = [
 ];
 
 const backgrounds = [
-  '/assets/bg1.jpg',
-  '/assets/bg2.jpg',
-  '/assets/bg3.jpg'
+  '/assets/Abg1.jpg',
+  '/assets/Abg2.jpg',
+  '/assets/Abg3.jpg'
 ];
 
 export default function AdminHome() {
