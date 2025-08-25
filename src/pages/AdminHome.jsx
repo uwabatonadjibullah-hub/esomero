@@ -22,18 +22,28 @@ const backgrounds = [
 export default function AdminHome() {
   const [currentQuote, setCurrentQuote] = useState(quotes[0]);
   const [bgIndex, setBgIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 🔐 Auth check
+    // 🔐 Auth & Role Check
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         navigate('/login');
         return;
       }
 
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const role = userDoc.exists() ? userDoc.data().role : null;
+
+        if (role !== 'admin') {
+          navigate('/unauthorized'); // Optional: create this page
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching user role:', error);
         navigate('/login');
       }
     });
@@ -53,6 +63,14 @@ export default function AdminHome() {
       unsubscribe();
     };
   }, [navigate]);
+
+  if (loading) {
+    return (
+      <div className="admin-home loading-screen">
+        <h2>Verifying access...</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-home" style={{ backgroundImage: `url(${backgrounds[bgIndex]})` }}>

@@ -12,7 +12,8 @@ const Signup = () => {
     gender: '',
     password: '',
     faculty: '',
-    program: ''
+    program: '',
+    role: '' // NEW: role field
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -32,11 +33,9 @@ const Signup = () => {
     try {
       const email = `${formData.username}@gmail.com`;
 
-      // Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, formData.password);
       const uid = userCredential.user.uid;
 
-      // Save trainee info in Firestore
       await setDoc(doc(db, 'users', uid), {
         uid,
         name: formData.name,
@@ -44,14 +43,13 @@ const Signup = () => {
         gender: formData.gender,
         faculty: formData.faculty,
         program: formData.program,
-        role: 'trainee',
+        role: formData.role,
         username: formData.username
       });
 
-      // Send email verification
       await sendEmailVerification(userCredential.user);
 
-      setSuccess('🎉 Signup successful! A verification email has been sent. Please check your inbox to activate your account.');
+      setSuccess(`🎉 ${formData.role === 'admin' ? 'Admin' : 'Trainee'} signup successful! Please verify your email.`);
       setTimeout(() => navigate('/login'), 4000);
     } catch (err) {
       console.error('Signup error:', err);
@@ -114,6 +112,14 @@ const Signup = () => {
           <option value="Night">Night</option>
           <option value="Weekend">Weekend</option>
         </select>
+
+        {/* 🎯 NEW: Role Selector */}
+        <select name="role" value={formData.role} onChange={handleChange} required>
+          <option value="">Select Role</option>
+          <option value="trainee">Trainee</option>
+          <option value="admin">Admin</option>
+        </select>
+
         <button type="submit" disabled={isSendingEmail}>
           {isSendingEmail ? 'Sending Verification...' : 'Sign Up'}
         </button>

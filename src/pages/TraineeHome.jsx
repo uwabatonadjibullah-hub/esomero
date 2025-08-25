@@ -13,6 +13,8 @@ const backgrounds = [
 
 const TraineeHome = () => {
   const [bgImage, setBgImage] = useState(backgrounds[0]);
+  const [fadeIn, setFadeIn] = useState(true);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,21 +25,50 @@ const TraineeHome = () => {
         return;
       }
 
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (!userDoc.exists() || userDoc.data().role !== 'trainee') {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const role = userDoc.exists() ? userDoc.data().role : null;
+
+        if (role !== 'trainee') {
+          navigate('/unauthorized'); // Optional fallback page
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error verifying role:', error);
         navigate('/login');
       }
     });
 
-    // 🎨 Random background
-    const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-    setBgImage(randomBg);
+    // 🎨 Background transition
+    const interval = setInterval(() => {
+      const nextBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+      setFadeIn(false); // Trigger fade-out
+      setTimeout(() => {
+        setBgImage(nextBg);
+        setFadeIn(true); // Trigger fade-in
+      }, 300); // Match CSS transition duration
+    }, 7000);
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
   }, [navigate]);
 
+  if (loading) {
+    return (
+      <div className="trainee-home loading-screen">
+        <h2>Verifying access...</h2>
+      </div>
+    );
+  }
+
   return (
-    <div className="trainee-home" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div
+      className={`trainee-home ${fadeIn ? 'fade-in' : 'fade-out'}`}
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="overlay">
         <h1>Welcome, Trainee 🌟</h1>
         <p>Your journey starts here. Learn, grow, and shine.</p>
