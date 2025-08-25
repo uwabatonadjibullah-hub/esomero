@@ -16,6 +16,7 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,6 +27,7 @@ const Signup = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsSendingEmail(true);
 
     try {
       const email = `${formData.username}@gmail.com`;
@@ -46,13 +48,16 @@ const Signup = () => {
         username: formData.username
       });
 
-      // Optional: Send email verification
+      // Send email verification
       await sendEmailVerification(userCredential.user);
 
-      setSuccess('Signup successful! Please check your email for verification.');
-      setTimeout(() => navigate('/login'), 3000);
+      setSuccess('🎉 Signup successful! A verification email has been sent. Please check your inbox to activate your account.');
+      setTimeout(() => navigate('/login'), 4000);
     } catch (err) {
-      setError(err.message);
+      console.error('Signup error:', err);
+      setError('⚠️ ' + err.message);
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -109,7 +114,9 @@ const Signup = () => {
           <option value="Night">Night</option>
           <option value="Weekend">Weekend</option>
         </select>
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={isSendingEmail}>
+          {isSendingEmail ? 'Sending Verification...' : 'Sign Up'}
+        </button>
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
       </form>

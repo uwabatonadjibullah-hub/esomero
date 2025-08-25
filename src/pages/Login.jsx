@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 import '../styles/Login.css';
@@ -9,18 +9,22 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [userToVerify, setUserToVerify] = useState(null);
+  const [resendMessage, setResendMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setResendMessage('');
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       if (!user.emailVerified) {
-        setError('Please verify your email before logging in.');
+        setUserToVerify(user);
+        setError('📩 Please verify your email before logging in.');
         return;
       }
 
@@ -44,6 +48,18 @@ const Login = () => {
     }
   };
 
+  const handleResendVerification = async () => {
+    if (userToVerify) {
+      try {
+        await sendEmailVerification(userToVerify);
+        setResendMessage('✅ Verification email resent. Check your inbox!');
+      } catch (err) {
+        console.error('Resend error:', err);
+        setResendMessage('⚠️ Failed to resend email. Try again later.');
+      }
+    }
+  };
+
   return (
     <div className="login-container">
       <h2>Welcome Back 🎬</h2>
@@ -64,6 +80,14 @@ const Login = () => {
         />
         <button type="submit">Login</button>
         {error && <p className="error">{error}</p>}
+        {userToVerify && (
+          <div className="resend-container">
+            <button type="button" onClick={handleResendVerification}>
+              Resend Verification Email
+            </button>
+            {resendMessage && <p className="info">{resendMessage}</p>}
+          </div>
+        )}
       </form>
 
       <div className="signup-prompt">
