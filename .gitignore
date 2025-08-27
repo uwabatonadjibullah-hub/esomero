@@ -35,3 +35,4 @@ build/
 # 🔄 Firebase config
 .firebase/
 .firebaserc
+.env.local
