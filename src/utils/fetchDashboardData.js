@@ -1,4 +1,4 @@
-import { db } from '../firebase'; // your Firestore config
+import { db } from '../firebase/config'; // your Firestore config
 import { collection, getDocs } from 'firebase/firestore';
 
 export const fetchDashboardData = async () => {

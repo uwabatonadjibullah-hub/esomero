@@ -1,6 +1,6 @@
 // src/services/moduleService.js
 
-import { db, storage } from '../firebase';
+import { db, storage } from '../firebase/config'; // updated
 import {
   collection,
   doc,

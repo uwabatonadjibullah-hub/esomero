@@ -1,6 +1,6 @@
 // attendanceService.js
 
-import { db } from '../firebase'; //updated
+import { db } from '../firebase/config'; //updated
 import { collection, onSnapshot } from 'firebase/firestore';
 import dayjs from 'dayjs';
 
