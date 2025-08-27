@@ -3,9 +3,9 @@ import '../components/Dashboard.css';
 import { useDashboardData } from '../hooks/useDashboardData';
 
 import PerformanceCharts from '../components/PerformanceCharts';
-import ModuleStats from '../components/ModuleStats';
+import ModuleStats from '../components/Modulestats';
 import ScoreHistogram from '../components/ScoreHistogram';
-import AttendanceSummary from '../components/AttendanceSummary'; // NEW
+import AttendanceSummary from '../components/AttendanceSummary'; 
 import QuizPerformance from '../components/QuizPerformance';
 import QuoteOfTheDay from '../components/QuoteOfTheDay';
 import DownloadReportButton from '../components/DownloadReportButton';
