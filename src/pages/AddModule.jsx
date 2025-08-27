@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { addModule } from '../services/moduleServices';
 import FileUploader from '../components/FileUploader';
 import { useR2 } from '../hooks/useR2';
-import { formatFileName } from '../../utils/formatFileName';
+import { formatFileName } from '../utils/formatFileName';
 
 const AddModule = () => {
   const [title, setTitle] = useState('');
