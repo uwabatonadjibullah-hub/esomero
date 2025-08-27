@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getModules } from '../../services/moduleService';
+import { getModules } from '../services/moduleServices';
 
 const ModuleManager = () => {
   const [modules, setModules] = useState([]);

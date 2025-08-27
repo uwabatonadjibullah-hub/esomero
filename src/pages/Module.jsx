@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getModuleById } from '../../services/moduleService';
+import { getModuleById } from '../services/moduleServices';
 
 const Module = () => {
   const { id } = useParams();
