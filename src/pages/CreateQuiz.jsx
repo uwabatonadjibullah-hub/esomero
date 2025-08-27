@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createQuiz } from '../services/moduleService';
+import { createQuiz } from '../services/moduleServices';
 
 const CreateQuiz = () => {
   const { id: moduleId } = useParams();
