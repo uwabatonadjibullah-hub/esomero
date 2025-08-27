@@ -1,5 +1,5 @@
 import React from 'react';
-import './Dashboard.css';
+import '../components/Dashboard.css';
 import { useDashboardData } from '../hooks/useDashboardData';
 
 import PerformanceCharts from '../components/PerformanceCharts';
