@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';;
 
 const RoleRoute = ({ element: Component, role, ...rest }) => {
   const { user, loading } = useAuth();

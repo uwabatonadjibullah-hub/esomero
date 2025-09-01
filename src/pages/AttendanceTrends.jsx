@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/config';  //updated
 import { collection, getDocs } from 'firebase/firestore';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import {

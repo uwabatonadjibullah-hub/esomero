@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { getAttendanceLogs } from '../services/attendanceServices'; // Replace with Firestore logic if needed
-import { useAuth } from '../hooks/useAuth'; // Optional role-based access
+import useAuth from '../hooks/useAuth'; // Optional role-based access
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
