@@ -19,7 +19,7 @@ const Welcome = () => {
 
       {/* Foreground Content */}
       <img src={Logo} alt="KSP Logo" className="logo" />
-      <h1>Welcome to KSP Rwanda Learning Portal</h1>
+      <h1>Welcome to Esomero Learning Portal</h1>
       <p>Empowering Trainers and Trainees Across All Faculties</p>
       
       <div className="button-group">
