@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { uploadToR2 } from '../../services/r2Service'; // ✅ direct R2 integration
+import { uploadToR2 } from '../services/r2Service'; // ✅ direct R2 integration
 
 const AddHandout = () => {
   const { id: moduleId } = useParams(); // module ID from route
