@@ -1,6 +1,6 @@
 // attendanceService.js
 
-import { db } from '../firebase/config'; //updated
+import { db } from '../firebase/config';
 import { collection, onSnapshot } from 'firebase/firestore';
 import dayjs from 'dayjs';
 
@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
  * @param {string} [userId] - Optional user ID to filter logs (e.g. for trainees).
  * @returns {Function} unsubscribe - Call this to stop listening.
  */
-export const subscribeToAttendanceLogs = (callback, userId) => {
+export const getAttendanceLogs = (callback, userId) => {
   const ref = collection(db, 'attendance');
 
   const unsubscribe = onSnapshot(
@@ -20,12 +20,10 @@ export const subscribeToAttendanceLogs = (callback, userId) => {
     (snapshot) => {
       const rawLogs = snapshot.docs.map(doc => doc.data());
 
-      // Optional: filter by user ID
       const filteredLogs = userId
         ? rawLogs.filter(entry => entry.userId === userId)
         : rawLogs;
 
-      // Group by date
       const grouped = {};
       filteredLogs.forEach(entry => {
         const date = entry.date || dayjs(entry.timestamp?.toDate()).format('YYYY-MM-DD');
@@ -39,12 +37,11 @@ export const subscribeToAttendanceLogs = (callback, userId) => {
         }
       });
 
-      // Sort and return last 7 days
       const sortedDates = Object.keys(grouped).sort((a, b) => new Date(a) - new Date(b));
       const recentDates = sortedDates.slice(-7);
 
       const processed = recentDates.map(date => ({
-        date: dayjs(date).format('ddd'), // e.g. "Mon", "Tue"
+        date: dayjs(date).format('ddd'),
         presentCount: grouped[date].presentCount,
         absentCount: grouped[date].absentCount,
       }));
