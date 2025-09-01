@@ -50,7 +50,7 @@ const AttendanceOverview = () => {
     };
 
     fetchAttendance();
-  }, [user, selectedDate, programFilter, cohortFilter]);
+  }, [user, dateKey, programFilter, cohortFilter]);
 
   useEffect(() => {
     if (!user || user.role !== 'admin') return;
