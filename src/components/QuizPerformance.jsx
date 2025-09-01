@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import '../styles/QuizPerformance';
+import '../styles/QuizPerformance.css';
 
 const QuizPerformance = () => {
   const [quizData, setQuizData] = useState([]);
