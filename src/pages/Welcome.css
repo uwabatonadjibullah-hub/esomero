@@ -42,10 +42,10 @@
 }
 
 @keyframes fade {
-  0%   { background-image: url('../assets/BG1.jpg'); }
-  33%  { background-image: url('../assets/BG2.jpg'); }
-  66%  { background-image: url('../assets/BG3.jpg'); }
-  100% { background-image: url('../assets/BG1.jpg'); }
+  0%   { background-image: url('/BG1.jpg'); }
+  33%  { background-image: url('/BG2.jpg'); }
+  66%  { background-image: url('/BG3.jpg'); }
+  100% { background-image: url('/BG1.jpg'); }
 }
 
 /* Collage layout */
