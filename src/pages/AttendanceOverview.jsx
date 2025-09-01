@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase/config';  //updated
+import { db } from '../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
 import useAuth from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -19,7 +19,6 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AttendanceOverview = () => {
   const { user } = useAuth();
-  if (!user || user.role !== 'admin') return <Navigate to="/unauthorized" />;
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [programFilter, setProgramFilter] = useState('All');
@@ -31,6 +30,8 @@ const AttendanceOverview = () => {
   const dateKey = selectedDate.toISOString().split('T')[0];
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') return;
+
     const fetchAttendance = async () => {
       const snapshot = await getDocs(collection(db, 'attendance'));
       const filtered = snapshot.docs
@@ -49,9 +50,11 @@ const AttendanceOverview = () => {
     };
 
     fetchAttendance();
-  }, [selectedDate, programFilter, cohortFilter]);
+  }, [user, selectedDate, programFilter, cohortFilter]);
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') return;
+
     const fetchAbsentees = async () => {
       const snapshot = await getDocs(collection(db, 'attendance'));
       const recent = snapshot.docs
@@ -71,7 +74,11 @@ const AttendanceOverview = () => {
     };
 
     fetchAbsentees();
-  }, []);
+  }, [user]);
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/unauthorized" />;
+  }
 
   const chartData = {
     labels: ['Present', 'Absent'],

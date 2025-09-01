@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '../firebase/config'; // updated
+import { db } from '../firebase/config';
 import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
 import useAuth from '../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const MakeAttendance = () => {
   const { user } = useAuth();
-  if (!user || user.role !== 'admin') return <Navigate to="/unauthorized" />;
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [programFilter, setProgramFilter] = useState('All');
@@ -16,8 +15,9 @@ const MakeAttendance = () => {
   const [attendance, setAttendance] = useState({});
   const [stats, setStats] = useState({ present: 0, absent: 0 });
 
-  // Fetch trainees
   useEffect(() => {
+    if (!user || user.role !== 'admin') return;
+
     const fetchTrainees = async () => {
       const snapshot = await getDocs(collection(db, 'users'));
       const filtered = snapshot.docs
@@ -25,27 +25,24 @@ const MakeAttendance = () => {
         .filter(user => user.role === 'trainee');
       setTrainees(filtered);
     };
-    fetchTrainees();
-  }, []);
 
-  // Filtered trainees by program
+    fetchTrainees();
+  }, [user]);
+
   const filteredTrainees = trainees.filter(t =>
     programFilter === 'All' ? true : t.program === programFilter
   );
 
-  // Mark attendance
   const handleMark = (id, present) => {
     setAttendance(prev => ({ ...prev, [id]: present }));
   };
 
-  // Mark all present
   const markAllPresent = () => {
     const all = {};
     filteredTrainees.forEach(t => (all[t.id] = true));
     setAttendance(all);
   };
 
-  // Submit attendance
   const handleSubmit = async () => {
     const dateKey = selectedDate.toISOString().split('T')[0];
     for (const trainee of filteredTrainees) {
@@ -61,12 +58,15 @@ const MakeAttendance = () => {
     calculateStats();
   };
 
-  // Calculate stats
   const calculateStats = () => {
     const present = Object.values(attendance).filter(Boolean).length;
     const total = filteredTrainees.length;
     setStats({ present, absent: total - present });
   };
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/unauthorized" />;
+  }
 
   return (
     <div className="attendance-container" style={{ padding: '2rem' }}>
